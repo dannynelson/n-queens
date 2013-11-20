@@ -24,6 +24,18 @@
       }, this);
     },
 
+    columns: function() {
+      var cols = [];
+      var rows = this.rows();
+      _(rows).each(function(row){
+        _(row).each(function(value, i){
+          cols[i] = cols[i] || [];
+          cols[i].push(value);
+        });
+      });
+      return cols;
+    },
+
     togglePiece: function(rowIndex, colIndex){
       this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
       this.trigger('change');
@@ -76,7 +88,7 @@
 
     // ROWS - run from left to right
     // --------------------------------------------------------------
-    // 
+    //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex){
       return _.filter(rowIndex, function(value){
@@ -100,15 +112,19 @@
     // 
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
-      return false; // fixme
+      return _.filter(colIndex, function(value){
+        return value === 1;
+      }).length > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
-      return false; // fixme
+      var cols = this.columns();
+      for (var i = 0; i < cols.length; i++) {
+        if (this.hasColConflictAt(cols[i])) return true;
+      }
+      return false; // fixme    },
     },
-
-
 
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
