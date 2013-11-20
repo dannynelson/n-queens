@@ -36,6 +36,42 @@
       return cols;
     },
 
+    majorDiagnols: function() {
+      // rows[0][0], rows[1][1] rows[2][2]
+      // rows[0][1] rows[1][2]
+      // rows[1][0]
+      debugger;
+      var diagnols = [];
+      var rows = this.rows();
+      var i, j, k, storage;
+      for (i = 0; i < rows.length - 1; i++) {
+        j = 0;
+        storage = [];
+        storage.push(rows[j][i]);
+        k = i;
+        while (k < rows.length - 1) {
+          j++;
+          k++;
+          storage.push(rows[j][k]);
+        }
+        diagnols.push(storage.slice(0));
+      }
+      var cols = this.columns();
+      for (i = 1; i < cols.length - 1; i++) {
+        j = 0;
+        storage = [];
+        storage.push(cols[j][i]);
+        k = i;
+        while (k < cols.length - 1) {
+          j++;
+          k++;
+          storage.push(cols[j][i]);
+        }
+        diagnols.push(storage.slice(0));
+      }
+      return diagnols;
+    },
+
     togglePiece: function(rowIndex, colIndex){
       this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
       this.trigger('change');
@@ -131,6 +167,7 @@
     // 
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
+      
       return false; // fixme
     },
 
