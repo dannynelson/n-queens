@@ -41,7 +41,6 @@
       var rows = this.rows();
       var i, j, storage;
       var max = rows.length - 1;
-
       // completes diagonal from initial value
       var completeDiagonal = function(rows, i, j) {
         storage = [rows[j][i]];
@@ -52,7 +51,6 @@
         }
         return storage;
       };
-
       // generate intial values
       diagonals.push(completeDiagonal(rows, 0, 0));
       for (i = 1; i < max; i++) {
@@ -60,8 +58,54 @@
         diagonals.push(completeDiagonal(rows, i, j));
         diagonals.push(completeDiagonal(rows, j, i));
       }
-
       return diagonals;
+    },
+
+    minorDiagonals: function() {
+      var diagonals = [];
+      var rows = this.rows();
+      rows = _(rows).map(function(row) {
+        return row.slice(0).reverse();
+      });
+      var i, j, storage;
+      var max = rows.length - 1;
+      var completeDiagonal = function(rows, i, j) {
+        storage = [rows[j][i]];
+        while (i < max && j < max) {
+          i++;
+          j++;
+          storage.push(rows[j][i]);
+        }
+        return storage;
+      };
+      // generate intial values
+      diagonals.push(completeDiagonal(rows, 0, 0));
+      for (i = 1; i < max; i++) {
+        j = 0;
+        diagonals.push(completeDiagonal(rows, i, j));
+        diagonals.push(completeDiagonal(rows, j, i));
+      }
+      return diagonals;
+      // completes diagonal from initial value
+      // var completeDiagonal = function(rows, j, i) {
+      //   storage = [rows[j][i]];
+      //   while (i > 0 && j < max) {
+      //     i--;
+      //     j++;
+      //     storage.push(rows[j][i]);
+      //   }
+      //   return storage;
+      // };
+      // // generate intial values
+      // diagonals.push(completeDiagonal(rows, 0, max));
+      // for (i = 1; i < max; i++) {
+      //   j = max;
+      //   debugger;
+      //   diagonals.push(completeDiagonal(rows, j, i));
+      //   j = 0;
+      //   diagonals.push(completeDiagonal(rows, i, j));
+      // }
+      // return diagonals;
     },
 
     togglePiece: function(rowIndex, colIndex){
@@ -179,13 +223,19 @@
     // --------------------------------------------------------------
     // 
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow){
-      return false; // fixme
+    hasMinorDiagonalConflictAt: function(diagonalArr){
+      return _.filter(diagonalArr, function(value){
+        return value === 1;
+      }).length > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function(){
-      return false; // fixme
+      var diagonals = this.minorDiagonals();
+      for (var i = 0; i < diagonals.length; i++) {
+        if (this.hasMinorDiagonalConflictAt(diagonals[i])) return true;
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
