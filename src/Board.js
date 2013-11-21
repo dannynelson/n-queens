@@ -41,8 +41,9 @@
       var rows = this.rows();
       var i, j, storage;
       var max = rows.length - 1;
-      // array of rows, and starting indexes
-      var completeRow = function(rows, i, j) {
+
+      // completes diagonal from initial value
+      var completeDiagonal = function(rows, i, j) {
         storage = [rows[j][i]];
         while (i < max && j < max) {
           i++;
@@ -51,12 +52,15 @@
         }
         return storage;
       };
-      diagonals.push(completeRow(rows, 0, 0));
+
+      // generate intial values
+      diagonals.push(completeDiagonal(rows, 0, 0));
       for (i = 1; i < max; i++) {
         j = 0;
-        diagonals.push(completeRow(rows, i, j));
-        diagonals.push(completeRow(rows, j, i));
+        diagonals.push(completeDiagonal(rows, i, j));
+        diagonals.push(completeDiagonal(rows, j, i));
       }
+
       return diagonals;
     },
 
@@ -154,14 +158,19 @@
     // --------------------------------------------------------------
     // 
     // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow){
-      
-      return false; // fixme
+    hasMajorDiagonalConflictAt: function(diagonalArr){
+      return _.filter(diagonalArr, function(value){
+        return value === 1;
+      }).length > 1;
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function(){
-      return false; // fixme
+      var diagonals = this.majorDiagonals();
+      for (var i = 0; i < diagonals.length; i++) {
+        if (this.hasMajorDiagonalConflictAt(diagonals[i])) return true;
+      }
+      return false;
     },
 
 
