@@ -31,40 +31,48 @@ window.findNRooksSolution = function(n){
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n){
-  var factorial = function(n) {
-    if (n === 1) return n;
-    return n * factorial(n - 1);
+  var xArray = _.range(0, n);
+  var resultsArray = [];
+  var storageArray = [];
+  var findSolution = function(y, xArr) {
+    for (var i = 0; i < xArr.length; i++) {
+      storageArray.push(xArr[i], y);
+      if (y !== 0) {
+        xA = xArr.slice(); // make copy
+        xA.splice(i, 1);
+        findSolution(y-1, xA);
+      } else {
+        resultsArray.push(storageArray);
+      }
+      storageArray.pop();
+    }
   };
-  return factorial(n);
-  
-  // var solutionCount = 0; //fixme
-  // var rookCounter = 0;
-  // var rows = solution.rows();
-  // var singleSolution = function() {
-  //   for (var x = 0; x < rows.length; x++) {
-  //     for (var y = 0; y < rows.length; y++) {
-  //       rows[y].splice(x, 1, 1);
-  //       if (solution.hasAnyRooksConflicts()) {
-  //         rows[y].splice(x, 1, 0);
-  //       } else {
-  //         rookCounter++;
-  //         if (rookCounter === n) solutionCount++;
-  //         singleSolution();
-  //         rows[y].splice(x, 1, 0);
-  //         rookCounter--;
-  //       }
-  //     }
-  //   }
-  // };
-  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  // return solutionCount;
+  findSolution(n - 1, xArray);
+  return resultsArray.length;
 };
 
 
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n){
-  var solution = undefined; //fixme
+//there must be at least one queen in every x and Y
+//iterate over x in the next Y, if there's no value, try 
+
+
+  if (n === 0) {
+    return undefined;
+  }
+  debugger;
+  var solution = new Board({n: n});
+  var rows = solution.rows();
+  for (var x = 0; x < rows.length; x++) {
+    for (var y = 0; y < rows.length; y++) {
+      rows[y].splice(x, 1, 1);
+      if (solution.hasAnyQueensConflicts()) {
+        rows[y].splice(x, 1, 0);
+      }
+    }
+  }
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
