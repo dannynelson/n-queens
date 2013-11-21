@@ -23,7 +23,6 @@ window.findNRooksSolution = function(n){
       }
     }
   }
-  solutions = rows;
   console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solution));
   return rows;
 };
@@ -32,9 +31,33 @@ window.findNRooksSolution = function(n){
 
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 window.countNRooksSolutions = function(n){
-  var solutionCount = undefined; //fixme
-  console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
-  return solutionCount;
+  var factorial = function(n) {
+    if (n === 1) return n;
+    return n * factorial(n - 1);
+  };
+  return factorial(n);
+  
+  // var solutionCount = 0; //fixme
+  // var rookCounter = 0;
+  // var rows = solution.rows();
+  // var singleSolution = function() {
+  //   for (var x = 0; x < rows.length; x++) {
+  //     for (var y = 0; y < rows.length; y++) {
+  //       rows[y].splice(x, 1, 1);
+  //       if (solution.hasAnyRooksConflicts()) {
+  //         rows[y].splice(x, 1, 0);
+  //       } else {
+  //         rookCounter++;
+  //         if (rookCounter === n) solutionCount++;
+  //         singleSolution();
+  //         rows[y].splice(x, 1, 0);
+  //         rookCounter--;
+  //       }
+  //     }
+  //   }
+  // };
+  // console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
+  // return solutionCount;
 };
 
 
@@ -50,8 +73,13 @@ window.findNQueensSolution = function(n){
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n){
-  var solutionCount = undefined; //fixme
+  var factorial = function(n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+  };
+  return factorial(n - 1);
+  // var solutionCount = undefined; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
-  return solutionCount;
+  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  // return solutionCount;
 };
