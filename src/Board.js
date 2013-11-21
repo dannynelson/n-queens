@@ -36,40 +36,28 @@
       return cols;
     },
 
-    majorDiagnols: function() {
-      // rows[0][0], rows[1][1] rows[2][2]
-      // rows[0][1] rows[1][2]
-      // rows[1][0]
-      debugger;
-      var diagnols = [];
+    majorDiagonals: function() {
+      var diagonals = [];
       var rows = this.rows();
-      var i, j, k, storage;
-      for (i = 0; i < rows.length - 1; i++) {
-        j = 0;
-        storage = [];
-        storage.push(rows[j][i]);
-        k = i;
-        while (k < rows.length - 1) {
+      var i, j, storage;
+      var max = rows.length - 1;
+      // array of rows, and starting indexes
+      var completeRow = function(rows, i, j) {
+        storage = [rows[j][i]];
+        while (i < max && j < max) {
+          i++;
           j++;
-          k++;
-          storage.push(rows[j][k]);
+          storage.push(rows[j][i]);
         }
-        diagnols.push(storage.slice(0));
-      }
-      var cols = this.columns();
-      for (i = 1; i < cols.length - 1; i++) {
+        return storage;
+      };
+      diagonals.push(completeRow(rows, 0, 0));
+      for (i = 1; i < max; i++) {
         j = 0;
-        storage = [];
-        storage.push(cols[j][i]);
-        k = i;
-        while (k < cols.length - 1) {
-          j++;
-          k++;
-          storage.push(cols[j][i]);
-        }
-        diagnols.push(storage.slice(0));
+        diagonals.push(completeRow(rows, i, j));
+        diagonals.push(completeRow(rows, j, i));
       }
-      return diagnols;
+      return diagonals;
     },
 
     togglePiece: function(rowIndex, colIndex){
