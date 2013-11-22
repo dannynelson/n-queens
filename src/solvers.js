@@ -85,9 +85,42 @@ window.findNQueensSolution = function(n){
 //there must be at least one queen in every x and Y
 //iterate over x in the next Y, if there's no value, try 
 
+  var chessboard = new Board({n: n});
+  // set default
+  var result = chessboard.rows();
+  var target = n - 1;
+  var queens = 0;
+  var max = 0;
+  var solutionFound = false;
+  // if (n === 0) return 1;
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+  var search = function(rowIdx) {
+    var row = chessboard.get(rowIdx);
+    for (var colIdx = 0; colIdx < n; colIdx++) {
+      // add piece
+      chessboard.togglePiece(rowIdx, colIdx);
+      // if conflicts...
+      if (chessboard.hasAnyQueensConflicts()) {
+        chessboard.togglePiece(rowIdx, colIdx);
+        continue;
+      }
+      // if successful...
+      if (rowIdx === target) {
+        result = chessboard.rows(); // to make a copy
+        solutionFound = true;
+        return;
+      } else {
+        search(rowIdx + 1);
+      }
+      if (solutionFound) return;
+      chessboard.togglePiece(rowIdx, colIdx);
+    }
+  };
+  
+  search(0);
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(result));
+  return result;
+  // return solution;
 };
 
 
@@ -96,7 +129,7 @@ window.countNQueensSolutions = function(n){
   var chessboard = new Board({n: n});
   var results = 0;
   var target = n - 1;
-  if (n === 0) return 1;
+  // if (n === 0) return 1;
 
   var search = function(rowIdx) {
     var row = chessboard.get(rowIdx);
@@ -119,6 +152,7 @@ window.countNQueensSolutions = function(n){
   };
 
   search(0);
+  console.log(results);
   return results;
   // var solutionCount = undefined; //fixme
 

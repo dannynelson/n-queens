@@ -18,7 +18,7 @@ describe("solvers", function() {
     it('finds the number of valid solutions for n of 1-8', function(){
       _.range(1, 9).map(function(n){
         var solutionCount = countNRooksSolutions(n);
-        var expectedSolutionCount = [1, 1, 2, 6, 24, 120, 720, 5040, 40320][n];
+        var expectedSolutionCount = ['blank', 1, 2, 6, 24, 120, 720, 5040, 40320][n];
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });
@@ -30,7 +30,11 @@ describe("solvers", function() {
     it('finds a valid solution for n of 0-8', function(){
       _.range(1, 8).map(function(n){
         var solutionBoard = new Board(findNQueensSolution(n));
+        var flattendSolution = _.flatten(solutionBoard.rows());
+        var queenCount = _.reduce(flattendSolution, function(memo, val) { return memo + val; });
+        var expectedQueenCount = ['blank', 1, 0, 0, 4, 5, 6, 7][n];
         expect(solutionBoard.get('n')).to.equal(n);
+        expect(queenCount).to.be.equal(expectedQueenCount)
         expect(solutionBoard.hasAnyQueensConflicts()).to.be.equal(false);
       });
     });
@@ -40,9 +44,9 @@ describe("solvers", function() {
   describe('countNQueensSolutions()', function(){
 
     it('finds the number of valid solutions for n of 0-8', function(){
-      _.range(0, 9).map(function(n){
+      _.range(1, 9).map(function(n){
         var solutionCount = countNQueensSolutions(n);
-        var expectedSolutionCount = [1, 1, 0, 0, 2, 10, 4, 40, 92][n];
+        var expectedSolutionCount = ['blank', 1, 0, 0, 2, 10, 4, 40, 92][n];
         expect(solutionCount).to.be.equal(expectedSolutionCount);
       });
     });
