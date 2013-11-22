@@ -184,16 +184,22 @@
     // 
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex){
-      return _.filter(colIndex, function(value){
-        return value === 1;
-      }).length > 1;
+      // return _.filter(colIndex, function(value){
+      //   return value === 1;
+      // }).length > 1;
+      var chessboard = this.rows();
+      var counter = 0;
+      for (var i = 0; i < chessboard.length; i++) {
+        counter += chessboard[i][colIndex];
+      }
+      return counter > 1;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function(){
-      var cols = this.columns();
-      for (var i = 0; i < cols.length; i++) {
-        if (this.hasColConflictAt(cols[i])) return true;
+      var cols = this.get('n');
+      for (var i = 0; i < cols; i++) {
+        if (this.hasColConflictAt(i)) return true;
       }
       return false; // fixme    },
     },
