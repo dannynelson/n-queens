@@ -242,17 +242,31 @@
     // --------------------------------------------------------------
     // 
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(diagonalArr){
-      return _.filter(diagonalArr, function(value){
-        return value === 1;
-      }).length > 1;
+    hasMinorDiagonalConflictAt: function(colIdx){
+      // return _.filter(diagonalArr, function(value){
+      //   return value === 1;
+      // }).length > 1;
+      var size = this.get('n');
+      var count = 0, rowIdx = 0;
+      for (; rowIdx < size && colIdx >= 0; rowIdx++, colIdx--) {
+        if (colIdx > size - 1) continue;
+        var row = this.get(rowIdx);
+        count += row[colIdx];
+      }
+      return count > 1;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function(){
-      var diagonals = this.minorDiagonals();
-      for (var i = 0; i < diagonals.length; i++) {
-        if (this.hasMinorDiagonalConflictAt(diagonals[i])) return true;
+      // var diagonals = this.minorDiagonals();
+      // for (var i = 0; i < diagonals.length; i++) {
+      //   if (this.hasMinorDiagonalConflictAt(diagonals[i])) return true;
+      // }
+      // return false;
+      debugger;
+      var size = this.get('n') - 1;
+      for (var i = size + size; i >= 0; i--) {
+        if (this.hasMinorDiagonalConflictAt(i)) return true;
       }
       return false;
     }

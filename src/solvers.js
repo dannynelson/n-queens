@@ -126,34 +126,64 @@ window.findNQueensSolution = function(n){
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n){
-  var chessboard = new Board({n: n});
-  var results = 0;
+  var columnIndexes = _.range(0, n);
+  var resultsArray = [];
+  var solutions = 0;
   var target = n - 1;
-  // if (n === 0) return 1;
-
-  var search = function(rowIdx) {
-    var row = chessboard.get(rowIdx);
-    for (var colIdx = 0; colIdx < n; colIdx++) {
+  var chessboard = new Board({n: n});
+  var findSolution = function(rowIdx, colIdxs) {
+    for (var i = 0; i < colIdxs.length; i++) {
+      var colIdx = colIdxs[i];
       // add piece
       chessboard.togglePiece(rowIdx, colIdx);
-      // if conflicts...
-      if (chessboard.hasAnyQueensConflicts()) {
+      // if conflicts
+      if (chessboard.hasAnyQueenConflictsOn(rowIdx, colIdx)) {
         chessboard.togglePiece(rowIdx, colIdx);
         continue;
       }
-      // if successful...
+      // if successful
       if (rowIdx === target) {
-        results++;
-      } else {
-        search(rowIdx + 1);
+        solutions++;
       }
+      var colIdxsCopy = colIdxs.slice(); // make copy
+      colIdxsCopy.splice(i, 1);
+      // recursive test
+      if (rowIdx < target) findSolution(rowIdx + 1, colIdxsCopy);
       chessboard.togglePiece(rowIdx, colIdx);
+      colIdxsCopy.splice(i, 0, colIdx);
     }
   };
+  findSolution(0, columnIndexes);
+  return solutions;
 
-  search(0);
-  console.log(results);
-  return results;
+  // var chessboard = new Board({n: n});
+  // var results = 0;
+  // var target = n - 1;
+  // // if (n === 0) return 1;
+
+  // var search = function(rowIdx) {
+  //   var row = chessboard.get(rowIdx);
+  //   for (var colIdx = 0; colIdx < n; colIdx++) {
+  //     // add piece
+  //     chessboard.togglePiece(rowIdx, colIdx);
+  //     // if conflicts...
+  //     if (chessboard.hasAnyQueensConflicts()) {
+  //       chessboard.togglePiece(rowIdx, colIdx);
+  //       continue;
+  //     }
+  //     // if successful...
+  //     if (rowIdx === target) {
+  //       results++;
+  //     } else {
+  //       search(rowIdx + 1);
+  //     }
+  //     chessboard.togglePiece(rowIdx, colIdx);
+  //   }
+  // };
+
+  // search(0);
+  // console.log(results);
+  // return results;
   // var solutionCount = undefined; //fixme
 
   // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
