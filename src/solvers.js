@@ -58,18 +58,68 @@ window.findNQueensSolution = function(n){
 //there must be at least one queen in every x and Y
 //iterate over x in the next Y, if there's no value, try 
 
+  var xArray = _.range(0, n);
+  var resultsArray = [];
+  var storageArray = [];
+  var findSolution = function(y, xArr) {
+    for (var i = 0; i < xArr.length; i++) {
+      // check for diagonal
+      storageArray.push(xArr[i], y);
+      if (y !== 0) {
+        xA = xArr.slice(); // make copy
+        xA.splice(i, 1);
+        // do this only if row passes
+        findSolution(y-1, xA);
+      } else {
+        // return result instead of push
+        resultsArray.push(storageArray);
+      }
+      storageArray.pop();
+    }
+  };
+
+  // create empty matrix
+  // toggle queens to match coordinates
+  findSolution(n - 1, xArray);
+  return resultsArray.length;
+
+  //
 
   if (n === 0) {
     return undefined;
   }
-  debugger;
   var solution = new Board({n: n});
-  var rows = solution.rows();
-  for (var x = 0; x < rows.length; x++) {
-    for (var y = 0; y < rows.length; y++) {
-      rows[y].splice(x, 1, 1);
-      if (solution.hasAnyQueensConflicts()) {
-        rows[y].splice(x, 1, 0);
+  var originalRows = solution.rows();
+  var queens = 0;
+  // var y = 0;
+  var findSolution = function(rows) {
+    for (var x = 0; x < rows.length; x++) {
+      for (var y = 0; y < rows.length; y++) {
+        if (!rows[y][x]) { //if coordinate already changed, skip over it
+          rows[y].splice(x, 1, 1);
+          // if there is a conflict, remove it and continue loop
+          if (solution.hasAnyQueensConflicts()) {
+            rows[y].splice(x, 1, 0);
+          // if no conflict, create new branch
+          } else {
+            queens++;
+            if (queens === n) return solution; //answer
+            // if (y < n) 
+            return findSolution(y++);
+            rows[y].splice(x, 1, 0);
+            queens--;
+          }
+        }
+      }
+    }
+  };
+  return findSolution(y);
+
+
+      }
+      if(!_.contains(rows[y], 1){
+
+      }
       }
     }
   }
